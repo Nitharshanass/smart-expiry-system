@@ -17,17 +17,21 @@ jobs:
 
     steps:
 
+      # Step 1: Get project files
       - name: Checkout Project
         uses: actions/checkout@v4
 
+      # Step 2: Install PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
 
+      # Step 3: Check PHP version
       - name: Check PHP Version
         run: php -v
 
+      # Step 4: Check PHP syntax
       - name: Check PHP Syntax
         run: |
           find . -name "*.php" -print0 | xargs -0 -n1 php -l
