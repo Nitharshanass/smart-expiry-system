@@ -41,10 +41,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Tag Docker Image
+            - name: Tag Docker Image
         run: |
-          docker tag smart-expiry-system:latest ${{ secrets.DOCKERHUB_USERNAME }}smart-expiry-system:latest
+          docker tag smart-expiry-system:latest ${{ secrets.DOCKERHUB_USERNAME }}/smart-expiry-system:latest
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}smart-expiry-system:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/smart-expiry-system:latest
