@@ -17,35 +17,68 @@ jobs:
 
     steps:
 
+      # Checkout project
       - name: Checkout Project
         uses: actions/checkout@v4
 
+
+      # Setup PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
 
+
+      # Check PHP version
       - name: Check PHP Version
         run: php -v
 
+
+      # Check PHP syntax
       - name: Check PHP Syntax
         run: |
           find . -name "*.php" -print0 | xargs -0 -n1 php -l
 
+
+      # Build Docker image locally
       - name: Build Docker Image
         run: |
           docker build -t smart-expiry-system:latest .
 
+
+      # Check Docker Hub username
+      - name: Check Docker Hub Username
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
+            echo "ERROR: DOCKERHUB_USERNAME is empty."
+            exit 1
+          fi
+
+          echo "Docker Hub username is available."
+
+
+      # Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
+          registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+
+      # Tag image with Docker Hub username
       - name: Tag Docker Image
         run: |
-          docker tag smart-expiry-system:latest ${{ secrets.DOCKERHUB_USERNAME }}smart-expiry-system:latest
+          docker tag smart-expiry-system:latest docker.io/${{ secrets.DOCKERHUB_USERNAME }}/smart-expiry-system:latest
 
+
+      # Check image tag
+      - name: Check Docker Image
+        run: |
+          docker images
+
+
+      # Push image to Docker Hub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}smart-expiry-system:latest
+          docker push docker.io/${{ secrets.DOCKERHUB_USERNAME }}/smart-expiry-system:latest
